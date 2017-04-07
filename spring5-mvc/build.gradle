@@ -1,0 +1,51 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.0.BUILD-SNAPSHOT'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
+}
+
+
+dependencies {
+    compile('io.projectreactor:reactor-core:3.0.6.BUILD-SNAPSHOT')
+
+    // With Tomcat
+    compile('org.springframework.boot:spring-boot-starter-web')
+
+    // With Undertow
+    /*
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
+    }
+    compile('org.springframework.boot:spring-boot-starter-undertow')
+    */
+
+    // With Jetty
+    /*
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
+    }
+    compile('org.springframework.boot:spring-boot-starter-jetty')
+    */
+}

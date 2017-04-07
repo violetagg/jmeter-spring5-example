@@ -1,1 +1,1 @@
-# jmeter-spring5-example
+# Apache JMeter Plugin based on the WebClient provided by Spring Framework 5 

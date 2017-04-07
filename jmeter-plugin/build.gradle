@@ -1,0 +1,42 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+jar {
+    baseName = 'jmeter-plugin-reactive'
+    version = '0.0.1-SNAPSHOT'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+}
+
+dependencies {
+    compile('org.apache.jmeter:ApacheJMeter_core:3.1')
+    compile('org.apache.jmeter:ApacheJMeter_java:3.1')
+    compile('org.springframework:spring-webflux:5.0.0.BUILD-SNAPSHOT')
+    compile('io.projectreactor:reactor-core:3.0.6.BUILD-SNAPSHOT')
+    compile('io.projectreactor.ipc:reactor-netty:0.6.3.BUILD-SNAPSHOT')
+    compile('io.projectreactor.ipc:reactor-ipc:0.6.2.BUILD-SNAPSHOT')
+}
+
+configurations {
+    runtime.exclude module: 'ApacheJMeter_core'
+    runtime.exclude module: 'ApacheJMeter_java'
+    runtime.exclude module: 'commons-logging'
+    runtime.exclude module: 'spring-aop'
+    runtime.exclude module: 'spring-beans'
+    runtime.exclude module: 'spring-context'
+    runtime.exclude module: 'spring-expression'
+}
+
+shadowJar {
+    baseName = 'jmeter-plugin-reactive'
+    version = '0.0.1-SNAPSHOT'
+}
