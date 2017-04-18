@@ -2,7 +2,9 @@ package com.example;
 
 import java.nio.ByteBuffer;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,13 +40,16 @@ final class HelloController {
     }
 
     @GetMapping(value = "/json_interval", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
-    Flux<String> json_interval(@RequestParam(required = false, defaultValue = "100") long delayInterval) {
-        return Flux.interval(Duration.ofMillis(delayInterval)).map(l -> "foo " + l).onBackpressureDrop();
+    Flux<Map<String,Long>> json_interval(@RequestParam(required = false, defaultValue = "100") long delayInterval) {
+        return Flux.interval(Duration.ofMillis(delayInterval))
+                .map(l -> Collections.singletonMap("foo", l)).onBackpressureDrop();
     }
 
     @GetMapping(value = "/json_list", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
-    Flux<String> json_list(@RequestParam(required = false, defaultValue = "100") long delayInterval) {
-        return Flux.fromIterable(list).delayElements(Duration.ofMillis(delayInterval)).onBackpressureDrop();
+    Flux<Map<String,String>> json_list(@RequestParam(required = false, defaultValue = "100") long delayInterval) {
+        return Flux.fromIterable(list).delayElements(Duration.ofMillis(delayInterval))
+                .map(l -> Collections.singletonMap("foo ", l))
+                .onBackpressureDrop();
     }
 
 }

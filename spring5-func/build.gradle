@@ -28,7 +28,6 @@ repositories {
 
 
 dependencies {
-    compile "io.projectreactor:reactor-core:3.0.6.BUILD-SNAPSHOT"
 
     // With Tomcat
     

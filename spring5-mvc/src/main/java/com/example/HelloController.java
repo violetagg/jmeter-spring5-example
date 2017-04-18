@@ -33,8 +33,8 @@ final class HelloController {
     }
 
     @GetMapping(value = "/delay", produces = MediaType.TEXT_PLAIN_VALUE)
-    Mono<ByteBuffer> delay(@RequestParam(required = false, defaultValue = "2000") long delayInterval) {
-        return Mono.just(buffer).delayElement(Duration.ofMillis(delayInterval));
+    Mono<byte[]> delay(@RequestParam(required = false, defaultValue = "2000") long delayInterval) {
+        return Mono.just(buffer.array()).delayElement(Duration.ofMillis(delayInterval));
     }
 
     @GetMapping(value = "/json_interval", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
