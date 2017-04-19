@@ -6,6 +6,11 @@ import java.time.Duration;
 import java.util.function.Function;
 
 import org.apache.jmeter.samplers.SampleResult;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.ipc.netty.http.HttpResources;
+import reactor.ipc.netty.resources.PoolResources;
+
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ClientHttpRequest;
@@ -13,11 +18,6 @@ import org.springframework.http.client.reactive.ClientHttpResponse;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.ipc.netty.http.HttpResources;
-import reactor.ipc.netty.resources.PoolResources;
 
 final class ReactiveWebClient {
     private final WebClient webClient;
@@ -64,11 +64,8 @@ final class ReactiveWebClient {
     private Flux<ByteBuffer> getBody(Mono<ClientResponse> response, ReactiveSampleResult sample,
             long initialResponseReadDelay) {
         return delayReadingResponse(response, initialResponseReadDelay)
-                .otherwise(t -> {
-                    sample.errorResult(t);
-                    return Mono.error(t);
-                })
-                .flatMap(r -> {
+                .doOnError(sample::errorResult)
+                .flatMapMany(r -> {
                     sample.latencyEnd();
                     int responseCode = r.statusCode().value();
                     sample.setResponseCode(responseCode + "");
@@ -84,14 +81,10 @@ final class ReactiveWebClient {
             long responseReadDelay, long sampleTimeout) {
         return delayReadingResponseElements(body, responseReadDelay)
                 .reduce(0L, (i, j) -> i + j.remaining())
-                .otherwise(t -> {
-                    sample.errorResult(t);
-                    return Mono.error(t);
-                })
-                .then(b -> {
+                .doOnError(sample::errorResult)
+                .doOnNext(b -> {
                     sample.sampleEnd();
                     sample.setBodySize(b);
-                    return Mono.empty();
                 })
                 .then()
                 .timeout(Duration.ofMillis(sampleTimeout));

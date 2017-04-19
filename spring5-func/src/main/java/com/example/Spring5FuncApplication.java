@@ -3,38 +3,39 @@ package com.example;
 //import static io.undertow.servlet.Servlets.defaultContainer;
 //import static io.undertow.servlet.Servlets.deployment;
 //import static io.undertow.servlet.Servlets.servlet;
-import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
-import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 import java.nio.ByteBuffer;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-//import javax.servlet.Servlet;
-//import javax.servlet.ServletException;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory;
-import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory;
-import org.springframework.boot.web.embedded.undertow.UndertowWebServer;
-import org.springframework.boot.web.server.WebServer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.ResolvableType;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServletHttpHandlerAdapter;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
+
+//import javax.servlet.Servlet;
+//import javax.servlet.ServletException;
 //import io.undertow.Undertow;
 //import io.undertow.server.HttpHandler;
 //import io.undertow.servlet.api.DeploymentInfo;
 //import io.undertow.servlet.api.DeploymentManager;
 //import io.undertow.servlet.api.InstanceHandle;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @SpringBootApplication
 public class Spring5FuncApplication {
@@ -62,14 +63,20 @@ public class Spring5FuncApplication {
                 .andRoute(GET("/json_interval"), request -> {
                     long delayInterval = Long.valueOf(request.queryParam("delayInterval").orElse("100"));
                     return ServerResponse.ok().contentType(MediaType.APPLICATION_STREAM_JSON)
-                        .body(Flux.interval(Duration.ofMillis(delayInterval))
-                            .map(l -> "foo " + l).onBackpressureDrop(), String.class);
+                            .body(BodyInserters.fromPublisher(
+                                    Flux.interval(Duration.ofMillis(delayInterval))
+                                            .map(l -> Collections.singletonMap("foo", l))
+                                            .onBackpressureDrop(),
+                                    ResolvableType.forClassWithGenerics(Map.class, String.class, Long.class)));
                 })
                 .andRoute(GET("/json_list"), request -> {
                     long delayInterval = Long.valueOf(request.queryParam("delayInterval").orElse("100"));
                     return ServerResponse.ok().contentType(MediaType.APPLICATION_STREAM_JSON)
-                        .body(Flux.fromIterable(list).delayElements(Duration.ofMillis(delayInterval))
-                            .onBackpressureDrop(), String.class);
+                        .body(BodyInserters.fromPublisher(
+                                Flux.fromIterable(list).delayElements(Duration.ofMillis(delayInterval))
+                                        .map(l -> Collections.singletonMap("foo", l))
+                                        .onBackpressureDrop(),
+                                ResolvableType.forClassWithGenerics(Map.class, String.class, Long.class)));
                 });
     }
 
