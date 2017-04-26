@@ -113,6 +113,7 @@
             </value>
           </objProp>
           <stringProp name="filename">./tomcat-webflux-func.csv</stringProp>
+          <intProp name="ramp.down.time">60000</intProp>
         </com.example.jmeter.plugin.reactive.sampler.ReactiveResultCollector>
         <hashTree/>
         <kg.apc.jmeter.perfmon.PerfMonCollector guiclass="kg.apc.jmeter.vizualizers.PerfMonGui" testclass="kg.apc.jmeter.perfmon.PerfMonCollector" testname="jp@gc - PerfMon Metrics Collector" enabled="true">
