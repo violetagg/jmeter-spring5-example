@@ -21,13 +21,15 @@ public class ReactiveSampleResult extends SampleResult {
     }
 
     void errorResult(Throwable t) {
-        sampleEnd();
-        setDataType("text");
-        ByteArrayOutputStream text = new java.io.ByteArrayOutputStream(200);
-        t.printStackTrace(new PrintStream(text));
-        setResponseData(text.toByteArray());
-        setResponseCode("Non HTTP response code: " + t.getClass().getName());
-        setResponseMessage(text.toString());
+        if (getEndTime() == 0) {
+            sampleEnd();
+            setDataType("text");
+            ByteArrayOutputStream text = new java.io.ByteArrayOutputStream(200);
+            t.printStackTrace(new PrintStream(text));
+            setResponseData(text.toByteArray());
+            setResponseCode("Non HTTP response code: " + t.getClass().getName());
+            setResponseMessage(text.toString());
+        }
         setSuccessful(false);
     }
 }
