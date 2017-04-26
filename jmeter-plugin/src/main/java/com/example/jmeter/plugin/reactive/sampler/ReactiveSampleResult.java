@@ -27,7 +27,7 @@ public class ReactiveSampleResult extends SampleResult {
         t.printStackTrace(new PrintStream(text));
         setResponseData(text.toByteArray());
         setResponseCode("Non HTTP response code: " + t.getClass().getName());
-        setResponseMessage("Non HTTP response message: " + t.getMessage());
+        setResponseMessage(text.toString());
         setSuccessful(false);
     }
 }
