@@ -1,6 +1,5 @@
 package com.example;
 
-import org.apache.catalina.connector.Connector;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
@@ -14,12 +13,11 @@ public class Spring5MvcApplication {
     }
 
     @Bean
-    TomcatServletWebServerFactory tomcatReactiveWebServerFactory() {
+    TomcatServletWebServerFactory tomcatServletWebServerFactory() {
         TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory() {
 
             @Override
-            protected void customizeConnector(Connector connector) {
-                System.out.println("maxKeepAliveRequests = -1");
+            protected void customizeConnector(org.apache.catalina.connector.Connector connector) {
                 connector.setProperty("maxKeepAliveRequests", "-1");
                 super.customizeConnector(connector);
             }
