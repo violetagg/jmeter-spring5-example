@@ -22,11 +22,11 @@ final class HelloController {
     private final Random rnd = new Random();
     private final byte[] content = new byte[16384];
     private final ByteBuffer buffer = ByteBuffer.wrap(content);
-    private final List<String> list;
+    private final List<Long> list;
 
     HelloController() {
         rnd.nextBytes(content);
-        list = Stream.iterate("foo ", l -> l + 1).limit(30).collect(Collectors.toList());
+        list = Stream.iterate(1L, l -> l + 1).limit(30).collect(Collectors.toList());
     }
 
     @GetMapping(value = "/hello", produces = MediaType.TEXT_PLAIN_VALUE)
@@ -42,14 +42,13 @@ final class HelloController {
     @GetMapping(value = "/json_interval", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
     Flux<Map<String,Long>> json_interval(@RequestParam(required = false, defaultValue = "100") long delayInterval) {
         return Flux.interval(Duration.ofMillis(delayInterval))
-                .map(l -> Collections.singletonMap("foo", l)).onBackpressureDrop();
+                .map(l -> Collections.singletonMap("foo", l)).onBackpressureBuffer();
     }
 
     @GetMapping(value = "/json_list", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
-    Flux<Map<String,String>> json_list(@RequestParam(required = false, defaultValue = "100") long delayInterval) {
+    Flux<Map<String,Long>> json_list(@RequestParam(required = false, defaultValue = "100") long delayInterval) {
         return Flux.fromIterable(list).delayElements(Duration.ofMillis(delayInterval))
-                .map(l -> Collections.singletonMap("foo ", l))
-                .onBackpressureDrop();
+                .map(l -> Collections.singletonMap("foo", l)).onBackpressureBuffer();
     }
 
 }

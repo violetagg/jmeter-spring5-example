@@ -30,11 +30,11 @@ public class Spring5FuncApplication {
     private final static Random rnd = new Random();
     private final static byte[] content = new byte[16384];
     private final ByteBuffer buffer = ByteBuffer.wrap(content);
-    private static List<String> list;
+    private static List<Long> list;
 
     public static void main(String[] args) {
         rnd.nextBytes(content);
-        list = Stream.iterate("foo ", l -> l + 1).limit(30).collect(Collectors.toList());
+        list = Stream.iterate(1L, l -> l + 1).limit(30).collect(Collectors.toList());
         SpringApplication.run(Spring5FuncApplication.class, args);
     }
 
@@ -54,7 +54,7 @@ public class Spring5FuncApplication {
                             .body(BodyInserters.fromPublisher(
                                     Flux.interval(Duration.ofMillis(delayInterval))
                                             .map(l -> Collections.singletonMap("foo", l))
-                                            .onBackpressureDrop(),
+                                            .onBackpressureBuffer(),
                                     ResolvableType.forClassWithGenerics(Map.class, String.class, Long.class)));
                 })
                 .andRoute(GET("/json_list"), request -> {
@@ -63,7 +63,7 @@ public class Spring5FuncApplication {
                         .body(BodyInserters.fromPublisher(
                                 Flux.fromIterable(list).delayElements(Duration.ofMillis(delayInterval))
                                         .map(l -> Collections.singletonMap("foo", l))
-                                        .onBackpressureDrop(),
+                                        .onBackpressureBuffer(),
                                 ResolvableType.forClassWithGenerics(Map.class, String.class, Long.class)));
                 });
     }
