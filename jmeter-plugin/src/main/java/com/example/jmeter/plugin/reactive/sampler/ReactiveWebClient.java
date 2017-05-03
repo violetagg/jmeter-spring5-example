@@ -79,7 +79,7 @@ final class ReactiveWebClient {
     private Mono<Void> readBody(Flux<ByteBuffer> body, ReactiveSampleResult sample,
             long responseReadDelay, long sampleTimeout) {
         return delayReadingResponseElements(body, responseReadDelay)
-                .take(20)
+                //.take(20)
                 .limitRate(1)
                 .reduce(0L, (i, j) -> i + j.remaining())
                 .doOnError(sample::errorResult)

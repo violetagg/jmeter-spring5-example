@@ -26,7 +26,7 @@ final class HelloController {
 
     HelloController() {
         rnd.nextBytes(content);
-        list = Stream.iterate(1L, l -> l + 1).limit(30).collect(Collectors.toList());
+        list = Stream.iterate(1L, l -> l + 1).limit(20).collect(Collectors.toList());
     }
 
     @GetMapping(value = "/hello", produces = MediaType.TEXT_PLAIN_VALUE)

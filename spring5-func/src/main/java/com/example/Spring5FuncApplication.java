@@ -34,7 +34,7 @@ public class Spring5FuncApplication {
 
     public static void main(String[] args) {
         rnd.nextBytes(content);
-        list = Stream.iterate(1L, l -> l + 1).limit(30).collect(Collectors.toList());
+        list = Stream.iterate(1L, l -> l + 1).limit(20).collect(Collectors.toList());
         SpringApplication.run(Spring5FuncApplication.class, args);
     }
 
