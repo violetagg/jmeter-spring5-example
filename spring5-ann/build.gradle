@@ -39,8 +39,8 @@ dependencies {
     // With Reactor Netty
     /*
     compile('org.springframework.boot:spring-boot-starter-webflux')
-    compile "io.projectreactor.ipc:reactor-netty:0.6.3.BUILD-SNAPSHOT"
-    compile "io.projectreactor.ipc:reactor-ipc:0.6.2.BUILD-SNAPSHOT"
+    compile "io.projectreactor.ipc:reactor-netty:0.6.3.RELEASE"
+    compile "io.projectreactor.ipc:reactor-ipc:0.6.2.RELEASE"
     */
 
     // With Undertow

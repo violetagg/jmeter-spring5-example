@@ -28,7 +28,7 @@ repositories {
 
 
 dependencies {
-    compile('io.projectreactor:reactor-core:3.1.0.BUILD-SNAPSHOT')
+    compile('io.projectreactor:reactor-core:3.1.0.M1')
 
     // With Tomcat
     compile('org.springframework.boot:spring-boot-starter-web')
