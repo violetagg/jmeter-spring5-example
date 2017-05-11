@@ -9,6 +9,7 @@
 3. Copy `./config/user.properties` to `<Apache-JMeter-Home>/bin`
 4. Copy `./config/500users.jmx` to `<Apache-JMeter-Home>/bin`
 5. Setup Servers Performance Monitoring as described here https://jmeter-plugins.org/wiki/PerfMon/
+6. Setup JMXMon Sample Collector as described here https://jmeter-plugins.org/wiki/JMXMon/
 
 ## Run
 1. Start the application
