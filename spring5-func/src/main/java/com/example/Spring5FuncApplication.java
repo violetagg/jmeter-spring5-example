@@ -16,7 +16,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.ResolvableType;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -55,7 +55,7 @@ public class Spring5FuncApplication {
                                     Flux.interval(Duration.ofMillis(delayInterval))
                                             .map(l -> Collections.singletonMap("foo", l))
                                             .onBackpressureBuffer(),
-                                    ResolvableType.forClassWithGenerics(Map.class, String.class, Long.class)));
+                                    new ParameterizedTypeReference<Map<String, Long>>(){}));
                 })
                 .andRoute(GET("/json_list"), request -> {
                     long delayInterval = Long.valueOf(request.queryParam("delayInterval").orElse("100"));
@@ -64,7 +64,7 @@ public class Spring5FuncApplication {
                                 Flux.fromIterable(list).delayElements(Duration.ofMillis(delayInterval))
                                         .map(l -> Collections.singletonMap("foo", l))
                                         .onBackpressureBuffer(),
-                                ResolvableType.forClassWithGenerics(Map.class, String.class, Long.class)));
+                                new ParameterizedTypeReference<Map<String, Long>>(){}));
                 });
     }
 
