@@ -29,7 +29,7 @@ repositories {
 
 dependencies {
     compile('io.projectreactor:reactor-core:3.1.0.RELEASE')
-    compile('org.springframework:spring-webflux:5.0.0.BUILD-SNAPSHOT')
+    compile('org.springframework:spring-webflux:5.0.0.RELEASE')
 
     // With Tomcat
     compile('org.springframework.boot:spring-boot-starter-webflux')
