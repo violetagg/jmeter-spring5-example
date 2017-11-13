@@ -4,6 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class Spring5MvcApplication {
@@ -23,6 +28,24 @@ public class Spring5MvcApplication {
             }
         };
         return factory;
+    }
+
+    
+    @Configuration
+    static class WebConfig implements WebMvcConfigurer {
+
+        @Override
+        public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+            configurer.setTaskExecutor(mvcTaskExecutor());
+        }
+
+        @Bean
+        public AsyncTaskExecutor mvcTaskExecutor() {
+            ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+            executor.setCorePoolSize(32);
+            executor.setAllowCoreThreadTimeOut(true);
+            return executor;
+        }
     }
 
 }
